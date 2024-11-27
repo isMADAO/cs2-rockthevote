@@ -1,9 +1,7 @@
-﻿using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Cvars;
-using CounterStrikeSharp.API.Modules.Timers;
 using cs2_rockthevote.Core;
-using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
+using StarCore.Module.TimerModule;
 
 namespace cs2_rockthevote
 {
@@ -15,7 +13,7 @@ namespace cs2_rockthevote
         private GameRules _gameRules;
         private EndMapVoteManager _voteManager;
         private EndOfMapConfig _config = new();
-        private Timer? _timer;
+        private StarTimerManager.StarTimer? _timer;
         private bool deathMatch => _gameMode?.GetPrimitiveValue<int>() == 2 && _gameType?.GetPrimitiveValue<int>() == 1;
         private ConVar? _gameType;
         private ConVar? _gameMode;
@@ -77,14 +75,14 @@ namespace cs2_rockthevote
                 KillTimer();
                 if (!_timeLimit.UnlimitedTime && _config.Enabled)
                 {
-                    _timer = plugin.AddTimer(1.0F, () =>
+                    _timer = StarTimerManager.AddTimer(plugin, 1.0F, () =>
                     {
                         if (_gameRules is not null && !_gameRules.WarmupRunning && !_pluginState.DisableCommands && _timeLimit.TimeRemaining > 0)
                         {
                             if (CheckTimeLeft())
                                 StartVote();
                         }
-                    }, TimerFlags.REPEAT);
+                    }, TimerLifeState.Repeat);
                 }
             }
 

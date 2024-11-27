@@ -21,6 +21,7 @@ namespace cs2_rockthevote
         public HookResult EventPlayerDisconnectNominate(EventPlayerDisconnect @event, GameEventInfo @eventInfo)
         {
             var player = @event.Userid;
+            if (player is null || !player.IsValid) return HookResult.Continue;
             _nominationManager.PlayerDisconnected(player);
             return HookResult.Continue;
         }

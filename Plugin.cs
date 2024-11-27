@@ -3,6 +3,7 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using cs2_rockthevote.Features;
 using Microsoft.Extensions.DependencyInjection;
+using StarCore.Module.TimerModule;
 using static CounterStrikeSharp.API.Core.Listeners;
 
 namespace cs2_rockthevote
@@ -109,6 +110,11 @@ namespace cs2_rockthevote
                 throw new Exception("Your config file is too old, please delete it from addons/counterstrikesharp/configs/plugins/RockTheVote and let the plugin recreate it on load");
 
             _dependencyManager.OnConfigParsed(config);
+        }
+
+        public override void Unload(bool hotReload)
+        {
+            StarTimerManager.ClearPluginTimers(this);
         }
     }
 }

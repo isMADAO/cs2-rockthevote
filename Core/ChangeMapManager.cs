@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Menu;
+using StarCore.Module.TimerModule;
 
 namespace cs2_rockthevote
 {
@@ -75,7 +76,7 @@ namespace cs2_rockthevote
 
             _pluginState.MapChangeScheduled = false;
             Server.PrintToChatAll(_localizer.LocalizeWithPrefixInternal(_prefix, "general.changing-map", NextMap!));
-            _plugin.AddTimer(3.0F, () =>
+            StarTimerManager.AddTimer(_plugin!,3.0F, () =>
             {
                 Map map = _maps.FirstOrDefault(x => x.Name == NextMap!)!;
                 if (Server.IsMapValid(map.Name))
@@ -88,7 +89,7 @@ namespace cs2_rockthevote
                 }
                 else
                     Server.ExecuteCommand($"ds_workshop_changelevel {map.Name}");
-            });
+            }, TimerLifeState.Once);
             return true;
         }
 
@@ -108,10 +109,10 @@ namespace cs2_rockthevote
                     if (delay < 0)
                         delay = 0;
 
-                    _plugin.AddTimer(delay, () =>
+                    StarTimerManager.AddTimer(_plugin, delay, () =>
                     {
                         ChangeNextMap(true);
-                    });
+                    }, TimerLifeState.Once);
                 }
                 return HookResult.Continue;
             });

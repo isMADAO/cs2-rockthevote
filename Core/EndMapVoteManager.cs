@@ -1,12 +1,10 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Menu;
-using CounterStrikeSharp.API.Modules.Timers;
 using cs2_rockthevote.Core;
-using System.Data;
 using System.Text;
+using StarCore.Module.TimerModule;
 using static CounterStrikeSharp.API.Core.Listeners;
-using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
 
 namespace cs2_rockthevote
 {
@@ -43,7 +41,7 @@ namespace cs2_rockthevote
         private readonly StringLocalizer _localizer;
         private PluginState _pluginState;
         private MapCooldown _mapCooldown;
-        private Timer? Timer;
+        private StarTimerManager.StarTimer? Timer;
 
         Dictionary<string, int> Votes = new();
         int timeLeft = -1;
@@ -204,7 +202,7 @@ namespace cs2_rockthevote
                 MenuManager.OpenChatMenu(player, menu);
 
             timeLeft = _config.VoteDuration;
-            Timer = _plugin!.AddTimer(1.0F, () =>
+            Timer = StarTimerManager.AddTimer(_plugin!,1.0F, () =>
             {
                 if (timeLeft <= 0)
                 {
@@ -212,7 +210,7 @@ namespace cs2_rockthevote
                 }
                 else
                     timeLeft--;
-            }, TimerFlags.REPEAT);
+            }, TimerLifeState.Repeat);
         }
     }
 }
