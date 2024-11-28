@@ -5,6 +5,7 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Menu;
 using cs2_rockthevote.Core;
+using Microsoft.Extensions.Logging;
 
 namespace cs2_rockthevote
 {
@@ -13,6 +14,12 @@ namespace cs2_rockthevote
         [ConsoleCommand("nominate", "nominate a map to rtv")]
         public void OnNominate(CCSPlayerController? player, CommandInfo command)
         {
+            string playerName = "Console";
+            if (player is not null && player.IsValid)
+            {
+                playerName = player.PlayerName;
+            }
+            this.Logger.LogInformation($"执行指令[nominate], 发起人[{playerName}]");
             string map = command.GetArg(1).Trim().ToLower();
             _nominationManager.CommandHandler(player!, map);
         }

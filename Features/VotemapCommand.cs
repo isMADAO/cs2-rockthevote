@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Menu;
 using cs2_rockthevote.Core;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace cs2_rockthevote
 {
@@ -14,6 +15,12 @@ namespace cs2_rockthevote
         [ConsoleCommand("votemap", "Vote to change to a map")]
         public void OnVotemap(CCSPlayerController? player, CommandInfo command)
         {
+            string playerName = "Console";
+            if (player is not null && player.IsValid)
+            {
+                playerName = player.PlayerName;
+            }
+            this.Logger.LogInformation($"执行指令[votemap], 发起人[{playerName}]");
             string map = command.GetArg(1).Trim().ToLower();
             _votemapManager.CommandHandler(player!, map);
         }

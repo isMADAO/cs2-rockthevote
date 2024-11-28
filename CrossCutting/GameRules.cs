@@ -1,30 +1,31 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Core.Attributes.Registration;
-using StarCore.Module.TimerModule;
-using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
+using Microsoft.Extensions.Logging;
 
 namespace cs2_rockthevote
 {
     public class GameRules : IPluginDependency<Plugin, Config>
     {
         CCSGameRules? _gameRules = null;
-        private Plugin _parentPlugin = null!;
+        private Plugin? _plugin = null;
 
         public void SetGameRules() => _gameRules = Utilities.FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules").FirstOrDefault()?.GameRules;
 
         public void SetGameRulesAsync()
         {
             _gameRules = null;
-            StarTimerManager.AddTimer(_parentPlugin, 1.0F, () =>
+            _plugin.Logger.LogInformation("SetGameRulesAsync() Start...");
+            new CounterStrikeSharp.API.Modules.Timers.Timer(1.0F, () =>
             {
+                _plugin.Logger.LogInformation("SetGameRulesAsync Timer Start...");
                 SetGameRules();
-            }, TimerLifeState.Once);
+                _plugin.Logger.LogInformation("SetGameRulesAsync Timer End...");
+            });
         }
 
         public void OnLoad(Plugin plugin)
         {
-            _parentPlugin = plugin;
+            _plugin = plugin;
             SetGameRulesAsync();
             plugin.RegisterEventHandler<EventRoundStart>(OnRoundStart);
             plugin.RegisterEventHandler<EventRoundAnnounceWarmup>(OnAnnounceWarmup);

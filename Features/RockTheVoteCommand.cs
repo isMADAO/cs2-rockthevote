@@ -3,6 +3,7 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace cs2_rockthevote
 {
@@ -11,6 +12,12 @@ namespace cs2_rockthevote
         [ConsoleCommand("rtv", "Votes to rock the vote")]
         public void OnRTV(CCSPlayerController? player, CommandInfo? command)
         {
+            string playerName = "Console";
+            if (player is not null && player.IsValid)
+            {
+                playerName = player.PlayerName;
+            }
+            this.Logger.LogInformation($"执行指令[rtv], 发起人[{playerName}]");
             _rtvManager.CommandHandler(player!);
         }
 

@@ -70,8 +70,11 @@ namespace cs2_rockthevote
 
         public void MapVoted(CCSPlayerController player, string mapName)
         {
+            // rtv里的配置 HideHudAfterVote
             if (_config!.HideHudAfterVote)
+            {
                 _voted.Add(player.UserId!.Value);
+            }
 
             Votes[mapName] += 1;
             player.PrintToChat(_localizer.LocalizeWithPrefix("emv.you-voted", mapName));
@@ -111,15 +114,19 @@ namespace cs2_rockthevote
             StringBuilder stringBuilder = new();
             stringBuilder.AppendFormat($"<b>{_localizer.Localize("emv.hud.hud-timer", timeLeft)}</b>");
             if (!_config!.HudMenu)
+            {
                 foreach (var kv in Votes.OrderByDescending(x => x.Value).Take(MAX_OPTIONS_HUD_MENU).Where(x => x.Value > 0))
                 {
                     stringBuilder.AppendFormat($"<br>{kv.Key} <font color='green'>({kv.Value})</font>");
                 }
+            }
             else
+            {
                 foreach (var kv in Votes.Take(MAX_OPTIONS_HUD_MENU))
                 {
                     stringBuilder.AppendFormat($"<br><font color='yellow'>!{index++}</font> {kv.Key} <font color='green'>({kv.Value})</font>");
                 }
+            }
 
             foreach (CCSPlayerController player in ServerManager.ValidPlayers().Where(x => !_voted.Contains(x.UserId!.Value)))
             {

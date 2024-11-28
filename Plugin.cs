@@ -3,6 +3,7 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using cs2_rockthevote.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using StarCore.Module.TimerModule;
 using static CounterStrikeSharp.API.Core.Listeners;
 
@@ -70,29 +71,40 @@ namespace cs2_rockthevote
             var player = Utilities.GetPlayerFromUserid(@event.Userid);
             if (player is not null)
             {
+                string playerName = "Console";
+                if (player.IsValid)
+                {
+                    playerName = player.PlayerName;
+                }
+                
                 var text = @event.Text.Trim().ToLower();
                 if (text == "rtv")
                 {
+                    this.Logger.LogInformation($"执行指令[rtv], 发起人[{playerName}]");
                     _rtvManager.CommandHandler(player);
                 }
                 else if (text.StartsWith("nominate"))
                 {
+                    this.Logger.LogInformation($"执行指令[nominate], 发起人[{playerName}]");
                     var split = text.Split("nominate");
                     var map = split.Length > 1 ? split[1].Trim() : "";
                     _nominationManager.CommandHandler(player, map);
                 }
                 else if (text.StartsWith("votemap"))
                 {
+                    this.Logger.LogInformation($"执行指令[votemap], 发起人[{playerName}]");
                     var split = text.Split("votemap");
                     var map = split.Length > 1 ? split[1].Trim() : "";
                     _votemapManager.CommandHandler(player, map);
                 }
                 else if (text.StartsWith("timeleft"))
                 {
+                    this.Logger.LogInformation($"执行指令[timeleft], 发起人[{playerName}]");
                     _timeLeft.CommandHandler(player);
                 }
                 else if (text.StartsWith("nextmap"))
                 {
+                    this.Logger.LogInformation($"执行指令[nextmap], 发起人[{playerName}]");
                     _nextMap.CommandHandler(player);
                 }
             }

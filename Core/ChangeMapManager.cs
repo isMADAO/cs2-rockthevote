@@ -1,7 +1,7 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Modules.Menu;
+using Microsoft.Extensions.Logging;
 using StarCore.Module.TimerModule;
 
 namespace cs2_rockthevote
@@ -79,6 +79,7 @@ namespace cs2_rockthevote
             StarTimerManager.AddTimer(_plugin!,3.0F, () =>
             {
                 Map map = _maps.FirstOrDefault(x => x.Name == NextMap!)!;
+                _plugin?.Logger.LogInformation($"即将更换至地图: {map.Name} ......");
                 if (Server.IsMapValid(map.Name))
                 {
                     Server.ExecuteCommand($"changelevel {map.Name}");
@@ -89,6 +90,7 @@ namespace cs2_rockthevote
                 }
                 else
                     Server.ExecuteCommand($"ds_workshop_changelevel {map.Name}");
+                _plugin?.Logger.LogInformation($"至地图: {map.Name} ......");
             }, TimerLifeState.Once);
             return true;
         }

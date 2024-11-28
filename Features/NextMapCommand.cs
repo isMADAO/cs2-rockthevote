@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using Microsoft.Extensions.Logging;
 
 namespace cs2_rockthevote.Features
 {
@@ -38,6 +39,12 @@ namespace cs2_rockthevote.Features
 
             plugin.AddCommand("nextmap", "Shows nextmap when defined", (player, info) =>
             {
+                string playerName = "Console";
+                if (player is not null && player.IsValid)
+                {
+                    playerName = player.PlayerName;
+                }
+                plugin.Logger.LogInformation($"执行指令[nextmap], 发起人[{playerName}]");
                 CommandHandler(player);
             });
         }

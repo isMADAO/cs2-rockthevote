@@ -4,6 +4,7 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Commands;
 using cs2_rockthevote.Core;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace cs2_rockthevote
 {
@@ -12,6 +13,12 @@ namespace cs2_rockthevote
         [ConsoleCommand("timeleft", "Prints in the chat the timeleft in the current map")]
         public void OnTimeLeft(CCSPlayerController? player, CommandInfo? command)
         {
+            string playerName = "Console";
+            if (player is not null && player.IsValid)
+            {
+                playerName = player.PlayerName;
+            }
+            this.Logger.LogInformation($"执行指令[timeleft], 发起人[{playerName}]");
             _timeLeft.CommandHandler(player);
         }
     }
